@@ -8,12 +8,13 @@ public class ReadFilter {
     public static void main(String[] args) {
         File readFile = new File("./data/data.csv");
 
+        // Arraylist failo informacijos laikymui
+        ArrayList<String> readList = new ArrayList<String>();
+
         try {
             BufferedReader fileReader = new BufferedReader(new FileReader(readFile));
             // Failo skaitymas
             System.out.println("... Failo skaitymas:");
-            // Arraylist failo informacijos laikymui
-            ArrayList<String> readList = new ArrayList<String>();
 
             String nextLine = fileReader.readLine();
             while (nextLine != null) {
@@ -21,33 +22,35 @@ public class ReadFilter {
                 readList.add(nextLine);
                 nextLine = fileReader.readLine();
             }
+        } catch (IOException e) {
+            System.out.println(e.getStackTrace());
+        }
 
-            // Failo filtravimas
-            System.out.println("... Failo filtravimas");
-            // Arraylist filtruotos informacijos laikymui
-            ArrayList<String> filterList = new ArrayList<String>();
+        // Failo filtravimas
+        System.out.println("... Failo filtravimas (įrašomi tik asmenys, kurių amžius > 18");
+        // Arraylist filtruotos informacijos laikymui
+        ArrayList<String> filterList = new ArrayList<String>();
 
-            readList.forEach((line) ->  {
-                String[] currentLine = line.split(" ");
-                int currentAge = Integer.parseInt(currentLine[1]);
-                if (currentAge > 18) {
-                    filterList.add(line);
-                }
-            });
+        int currentAge;
+        String[] currentLine;
+        for (String line : readList) {
+            currentLine = line.split(" ");
+            currentAge = Integer.parseInt(currentLine[1]);
+            if (currentAge > 18) {
+                filterList.add(line);
+            }
+        }
 
-            // Filtruotų duomenų rašymas į naują failą
-            File filteredFile = new File("./data/filteredData.csv");
+        // Filtruotų duomenų rašymas į naują failą
+        File filteredFile = new File("./data/filteredData.csv");
 
-            filterList.forEach((line) -> {
-                try {
-                    System.out.println(line);
-                    BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filteredFile, true));
-                    fileWriter.write(line);
-                } catch (IOException e) {
-                    System.out.println(e.getStackTrace());
-                }
-            });
-
+        try {
+            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filteredFile));
+            for (String line : filterList) {
+                fileWriter.write(line + "\n");
+                System.out.println(line);
+            }
+            fileWriter.close();
         } catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
