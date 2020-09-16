@@ -15,6 +15,7 @@ public class InputOutput {
                 System.out.println(fileLine);
                 fileLine = reader.readLine();
             }
+            reader.close();
         } catch(Exception e) {
             System.out.println(e.getStackTrace());
         }
